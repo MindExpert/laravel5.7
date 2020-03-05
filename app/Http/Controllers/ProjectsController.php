@@ -7,6 +7,16 @@ use App\Project;
 
 class ProjectsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+            // you can say apply this middleware auth only to
+        // $this->middleware('auth')->only(['store', 'update']);
+            // you can say apply to everything except
+        // $this->middleware('auth')->except(['show']);
+    }
+
     public function index() 
     {
         // auth()->id() // Id of loged in user
@@ -24,7 +34,10 @@ class ProjectsController extends Controller
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
         ]);
-        Project::create($validated);
+        Project::create($validated + ['owner_id' => auth()->id()]);
+        
+        // $validated['owner_id] = auth()->id();
+
 
         // 1st method
         /*
