@@ -30,7 +30,7 @@ Route::get('/', function () {
 
 */
 
-Route::resource('projects', 'ProjectsController');
+Route::resource('projects', 'ProjectsController'); //->middleware('can:update, project');
 Route::post('/projects/{project}/tasks', 'ProjectTasksController@store');
 // Route::patch('/tasks/{task}', 'ProjectTasksController@update');
 
@@ -38,6 +38,8 @@ Route::post('/projects/{project}/tasks', 'ProjectTasksController@store');
 Route::post('/completed-tasks/{task}', 'CompletedTasksController@store');
 Route::delete('/completed-tasks/{task}', 'CompletedTasksController@destroy');
 
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
 
 
@@ -48,10 +50,3 @@ Route::delete('/completed-tasks/{task}', 'CompletedTasksController@destroy');
 // Route::patch('/projects/{project}', 'ProjectsController@update');
 // Route::delete('/projects/{project}', 'ProjectsController@destroy');
 // Route::get('/projects/{project}/edit', 'ProjectsController@edit');
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

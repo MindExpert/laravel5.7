@@ -25,8 +25,8 @@ class ProjectsController extends Controller
         // auth()->guest()
 
         $projects = Project::where('owner_id', auth()->id())->get();
-        return view('projects.index', ['projects' => $projects]);
-        //  or use  (identical)-> return view('projects.index', compact('projects'));
+        return view('projects.index', compact('projects'));
+        //  or use  (identical)-> return view('projects.index', ['projects' => $projects]);
     }
 
     public function store() { 
@@ -72,8 +72,15 @@ class ProjectsController extends Controller
 
     public function show(Project $project) {
         // $project = Project::findOrFail($id);
+
         // abort_if ($project->owner_id !== auth()->id(), 403);
-        $this->authorize('view', $project);
+        // abort_unless($project->owner_id !== auth()->id(), 403);
+        // if (\Gate::denies('update', $project)) {
+        //     abort(403);
+        // }
+        // abort_unless(\Gate::allows('update', $project), 403);   
+
+        $this->authorize('update', $project);
         return view('projects.show', compact('project'));
     }
 
