@@ -29,7 +29,7 @@ class ProjectPolicy
      * @return mixed
      */
     public function view(User $user, Project $project)
-    {
+    {   // *** ME ***
         // check the owner_id of the $project and determine 
         // if thats equal to the id of authenticated $user
         return $project->owner_id == $user->id;
