@@ -26,7 +26,7 @@ class ProjectsController extends Controller
 
         $projects = Project::where('owner_id', auth()->id())->get();
         return view('projects.index', compact('projects'));
-        //  or use  (identical)-> return view('projects.index', ['projects' => $projects]);
+        //  or return (identical)-> return view('projects.index', ['projects' => $projects]);
     }
 
     public function store() { 
@@ -79,31 +79,35 @@ class ProjectsController extends Controller
         //     abort(403);
         // }
         // abort_unless(\Gate::allows('update', $project), 403);   
+        // auth()->user()->can('update', $project);
 
         $this->authorize('update', $project);
         return view('projects.show', compact('project'));
     }
 
     public function update(Project $project) {
-        // this is same as one below to setting the attributes and persisting it (save)
+        // we are setting the attributes and saving it
+        $this->authorize('update', $project);
         $project->update(request(['title', 'description'])); 
-
+        return redirect('/projects');
         /*
             $project->title = request('title');
             $project->description = request('description');
             $project->save();
         */
-        return redirect('/projects');
     }
 
     public function destroy(Project $project) {
         // dd(request()->all()); //Quick Debugging function
         // Project::findOrFail($id)->delete();
+
+        $this->authorize('update', $project);
         $project->delete();
         return redirect('/projects');
     }
 
     public function edit(Project $project) { // example.com/projects/1/edit
+        $this->authorize('update', $project);
         return view('projects.edit', compact('project'));
     }
 }
