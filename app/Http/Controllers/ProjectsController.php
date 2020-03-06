@@ -11,19 +11,10 @@ class ProjectsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-            // you can say apply this middleware auth only to
-        // $this->middleware('auth')->only(['store', 'update']);
-            // you can say apply to everything except
-        // $this->middleware('auth')->except(['show']);
     }
 
     public function index() 
     {
-        // auth()->id() // Id of loged in user
-        // auth()->user() // User Instance
-        // auth()->check() //boolean
-        // auth()->guest()
-
         $projects = Project::where('owner_id', auth()->id())->get();
         return view('projects.index', compact('projects'));
         //  or return (identical)-> return view('projects.index', ['projects' => $projects]);
@@ -98,9 +89,6 @@ class ProjectsController extends Controller
     }
 
     public function destroy(Project $project) {
-        // dd(request()->all()); //Quick Debugging function
-        // Project::findOrFail($id)->delete();
-
         $this->authorize('update', $project);
         $project->delete();
         return redirect('/projects');
