@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\User;
 use App\Mail\ProjectCreated;
-
 use Illuminate\Support\Facades\Mail;
 
 
@@ -19,8 +18,8 @@ class ProjectsController extends Controller
 
     public function index() 
     {
-        // $projects = auth()->user()->projects;
         // $projects = Project::where('owner_id', auth()->id())->get();
+        // $projects = auth()->user()->projects;
         // dump($projects);
         return view('projects.index', [
             'projects' => auth()->user()->projects
@@ -33,9 +32,13 @@ class ProjectsController extends Controller
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
         ]);
-            // $project = 
-        Project::create($validated + ['owner_id' => auth()->id()]);
-        // Mail::to('admin@example.com')->send(
+        $project = Project::create($validated + ['owner_id' => auth()->id()]);
+
+        Mail::mailer('smtp')
+        ->to($project->owner->email)
+        ->send(new ProjectCreated($project));
+
+        // Mail::to($project->owner->email)->send(
         //     new ProjectCreated($project)
         // );
         

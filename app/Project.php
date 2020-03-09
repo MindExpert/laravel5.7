@@ -18,17 +18,23 @@ class Project extends Model
 
         $this->tasks()->create($task);
 
-        /* 3rd Method */
-        // $this->tasks()->create(compact('description'));
+        /* 3rd Method 
+            $this->tasks()->create(compact('description'));
+        */
+        /* 2nd Method 
+            $this->tasks()->create(['description'=> $description]);
+        */
+        /* 1st Method 
+            return Task::create([
+                'project_id' => $this->id,
+                'description' => $description
+            ]);
+        */
+    }
 
-        /* 2nd Method */
-        // $this->tasks()->create(['description'=> $description]);
-
-        /* 1st Method */
-        //     return Task::create([
-        //        'project_id' => $this->id,
-        //        'description' => $description
-        //    ]);
+    public function owner() 
+    {
+        return $this->belongsTo(User::class);
     }
 
 }
