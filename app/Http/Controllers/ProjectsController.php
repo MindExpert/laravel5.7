@@ -32,16 +32,7 @@ class ProjectsController extends Controller
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
         ]);
-        $project = Project::create($validated + ['owner_id' => auth()->id()]);
-
-        Mail::mailer('smtp')
-        ->to($project->owner->email)
-        ->send(new ProjectCreated($project));
-
-        // Mail::to($project->owner->email)->send(
-        //     new ProjectCreated($project)
-        // );
-        
+        Project::create($validated + ['owner_id' => auth()->id()]);    
         return redirect('/projects');
     }
 
