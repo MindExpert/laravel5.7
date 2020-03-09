@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\User;
 use App\Mail\ProjectCreated;
 
 use Illuminate\Support\Facades\Mail;
@@ -18,13 +19,16 @@ class ProjectsController extends Controller
 
     public function index() 
     {
-        $projects = Project::where('owner_id', auth()->id())->get();
-        dump($projects);
-        return view('projects.index', compact('projects'));
-        //  or return view('projects.index', ['projects' => $projects]);
+        // $projects = auth()->user()->projects;
+        // $projects = Project::where('owner_id', auth()->id())->get();
+        // dump($projects);
+        return view('projects.index', [
+            'projects' => auth()->user()->projects
+        ]);
     }
 
-    public function store() { 
+    public function store() 
+    { 
         $validated = request()->validate([
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
@@ -38,13 +42,13 @@ class ProjectsController extends Controller
         return redirect('/projects');
     }
 
-    public function create() {    
+    public function create() 
+    {    
         return view('projects.create');
     }
 
-    public function show(Project $project) {
-        // $project = Project::findOrFail($id);
-
+    public function show(Project $project) 
+    {
         // abort_if ($project->owner_id !== auth()->id(), 403);
         // abort_unless($project->owner_id !== auth()->id(), 403);
         // if (\Gate::denies('update', $project)) {
@@ -57,27 +61,33 @@ class ProjectsController extends Controller
         return view('projects.show', compact('project'));
     }
 
-    public function update(Project $project) {
+    public function update(Project $project) 
+    {
         // we are setting the attributes and saving it
         $this->authorize('update', $project);
-        $project->update(request(['title', 'description'])); 
+        $project->update($this->validateProject()); // we used the method for validation
         return redirect('/projects');
-        /*
-            $project->title = request('title');
-            $project->description = request('description');
-            $project->save();
-        */
     }
 
-    public function destroy(Project $project) {
+    public function destroy(Project $project) 
+    {
         $this->authorize('update', $project);
         $project->delete();
         return redirect('/projects');
     }
 
-    public function edit(Project $project) { // example.com/projects/1/edit
+    public function edit(Project $project) // example.com/projects/1/edit
+    { 
         $this->authorize('update', $project);
         return view('projects.edit', compact('project'));
+    }
+
+    protected function validateProject()
+    {
+        return request()->validate([
+            'title' => ['required', 'min:3', 'max:165'],
+            'description' => ['required', 'min:3', 'max:510'],
+        ]);
     }
 }
 

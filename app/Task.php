@@ -17,7 +17,6 @@ class Task extends Model
     // a task can be completed
     public function complete($completed = true)
     {
-        // $this->update(['completed' => $completed]);
         $this->update(compact('completed'));
     }
 
