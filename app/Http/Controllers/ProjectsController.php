@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Project;
+use App\Mail\ProjectCreated;
+
+use Illuminate\Support\Facades\Mail;
+
 
 class ProjectsController extends Controller
 {
@@ -16,8 +19,9 @@ class ProjectsController extends Controller
     public function index() 
     {
         $projects = Project::where('owner_id', auth()->id())->get();
+        dump($projects);
         return view('projects.index', compact('projects'));
-        //  or return (identical)-> return view('projects.index', ['projects' => $projects]);
+        //  or return view('projects.index', ['projects' => $projects]);
     }
 
     public function store() { 
@@ -25,35 +29,12 @@ class ProjectsController extends Controller
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
         ]);
+            // $project = 
         Project::create($validated + ['owner_id' => auth()->id()]);
+        // Mail::to('admin@example.com')->send(
+        //     new ProjectCreated($project)
+        // );
         
-        // $validated['owner_id] = auth()->id();
-
-
-        // 1st method
-        /*
-            request()->validate([
-                'title' => ['required', 'min:3', 'max:165'],
-                'description' => ['required', 'min:3', 'max:510'],
-            ]);
-            Project::create(request(['title', 'description']));
-        */
-        
-        // 2nd Method
-        /*
-            Project::create([
-                'title' => request('title'),
-                'description' => request('description'),
-            ]);
-        */   
-
-        // 3rd Method
-        /*
-            $project = new Project();
-            $project->title = request('title');
-            $project->description = request('description');
-            $project->save();
-        */
         return redirect('/projects');
     }
 

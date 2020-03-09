@@ -10,6 +10,28 @@ class ProjectTasksController extends Controller
 {
     public function store(Project $project)
     {
+
+        // $validated['owner_id] = auth()->id();
+        /* 1st method
+            request()->validate([
+                'title' => ['required', 'min:3', 'max:165'],
+                'description' => ['required', 'min:3', 'max:510'],
+            ]);
+            Project::create(request(['title', 'description']));
+        */
+        /* 2nd Method
+            Project::create([
+                'title' => request('title'),
+                'description' => request('description'),
+            ]);
+        */   
+        /* 3rd Method
+            $project = new Project();
+            $project->title = request('title');
+            $project->description = request('description');
+            $project->save();
+        */
+
         /* 2nd Method */
         // what are we doing to the project, We are adding a task, so I'm gonna create a method called addTask();
         // This method is of Project model, there we "$this->tasks()->create(compact('description'))", and since its 
@@ -19,13 +41,6 @@ class ProjectTasksController extends Controller
             'description' => ['required',  'min:3', 'max:165']
         ]);
         $project->addTask($validated);
-
-
-        /* 1st Method */
-        //    Task::create([
-        //        'project_id' => $project->id,
-        //        'description' => request('description'),
-        //    ]);
 
        return back();
     }
