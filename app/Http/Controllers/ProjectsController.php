@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
 use App\User;
-use App\Mail\ProjectCreated;
-use Illuminate\Support\Facades\Mail;
+use App\Project;
+use App\Events\ProjectCreated;
 
 
 class ProjectsController extends Controller
@@ -28,11 +27,9 @@ class ProjectsController extends Controller
 
     public function store() 
     { 
-        $validated = request()->validate([
-            'title' => ['required', 'min:3', 'max:165'],
-            'description' => ['required', 'min:3', 'max:510'],
-        ]);
-        Project::create($validated + ['owner_id' => auth()->id()]);    
+        $attributes = $this->validateProject();
+        $attributes['owner_id'] = auth()->id();
+        $project = Project::create($attributes);
         return redirect('/projects');
     }
 
@@ -59,7 +56,11 @@ class ProjectsController extends Controller
     {
         // we are setting the attributes and saving it
         $this->authorize('update', $project);
-        $project->update($this->validateProject()); // we used the method for validation
+        $validated = request()->validate([
+            'title' => ['required', 'min:3', 'max:165'],
+            'description' => ['required', 'min:3', 'max:510'],
+        ]);
+        $project->update($validated); // we used the method for validation
         return redirect('/projects');
     }
 

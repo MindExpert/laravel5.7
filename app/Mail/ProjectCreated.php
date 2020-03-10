@@ -30,7 +30,7 @@ class ProjectCreated extends Mailable
      */
     public function build()
     {
-        return $this->from('example@example.com')
+        return $this->from('testing@example.com')
                 ->markdown('mail.project-created');
     }
 }

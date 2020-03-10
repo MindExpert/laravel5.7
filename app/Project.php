@@ -2,28 +2,16 @@
 
 namespace App;
 
-use App\Mail\ProjectCreated;
-use Illuminate\Support\Facades\Mail;
+use App\Events\ProjectCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
     protected $guarded = [];
 
-    protected static function boot()
-    {
-       parent::boot();
-       static::created(function ($project) {
-        //This code will be executed only after a project has been created.
-            Mail::mailer('smtp')
-            ->to($project->owner->email)
-            ->send(new ProjectCreated($project));
-
-            // Mail::to($project->owner->email)->send(
-            //     new ProjectCreated($project)
-            // );
-       });
-    }
+    protected $dispatchesEvents = [
+        'created' => ProjectCreated::class
+    ];
 
     public function tasks()
     {
@@ -32,16 +20,11 @@ class Project extends Model
 
     public function addTask($task)
     {
-
         $this->tasks()->create($task);
-
-        /* 3rd Method 
-            $this->tasks()->create(compact('description'));
-        */
-        /* 2nd Method 
+        /*  2nd Method 
             $this->tasks()->create(['description'=> $description]);
         */
-        /* 1st Method 
+        /*  1st Method 
             return Task::create([
                 'project_id' => $this->id,
                 'description' => $description
