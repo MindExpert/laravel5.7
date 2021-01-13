@@ -48,14 +48,14 @@ class ProjectsController extends Controller
         // abort_unless(\Gate::allows('update', $project), 403);   
         // auth()->user()->can('update', $project);
 
-        $this->authorize('update', $project);
+        // $this->authorize('update', $project);
         return view('projects.show', compact('project'));
     }
 
     public function update(Project $project) 
     {
         // we are setting the attributes and saving it
-        $this->authorize('update', $project);
+        // $this->authorize('update', $project);
         $validated = request()->validate([
             'title' => ['required', 'min:3', 'max:165'],
             'description' => ['required', 'min:3', 'max:510'],
@@ -66,14 +66,14 @@ class ProjectsController extends Controller
 
     public function destroy(Project $project) 
     {
-        $this->authorize('update', $project);
+        // $this->authorize('update', $project);
         $project->delete();
         return redirect('/projects');
     }
 
     public function edit(Project $project) // example.com/projects/1/edit
     { 
-        $this->authorize('update', $project);
+        // $this->authorize('update', $project);
         return view('projects.edit', compact('project'));
     }
 

@@ -16,6 +16,9 @@
 
                     You are logged in!
                 </div>
+                <div class="card-body">
+                   Go To <a href="/projects">Projects</a>
+                </div>
             </div>
         </div>
     </div>
